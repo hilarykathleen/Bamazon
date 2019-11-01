@@ -1,17 +1,13 @@
 var mysql = require("mysql");
-// var inquirer = require("inquirer");
+var inquirer = require("inquirer");
 
-// create the connection information for the sql database
 var connection = mysql.createConnection({
   host: "localhost",
 
-  // Your port; if not 3306
   port: 3306,
 
-  // Your username
   user: "root",
 
-  // Your password
   password: "rootroot",
   database: "bamazon_DB"
 });
@@ -19,6 +15,48 @@ var connection = mysql.createConnection({
 connection.connect(function(err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
-    // run the start function after the connection is made to prompt the user
-    // start();
+    start();
   });
+
+  function start() {
+
+    inquirer.prompt([{
+
+        type: "input",
+        message: "What is the ID number of the item you would like to purchase?",
+        name: "inputId",
+    },
+    {
+        type: "input",
+        message: "How many units of this item would you like to purchase?",
+        name: "inputNumber",
+
+    }
+
+]).then(function(userOrder) {
+
+   connection.query("SELECT * FROM products WHERE id=?", userOrder.inputId, function(err, res) {
+        for (var i = 0; i < res.length; i++) {
+
+            if (userOrder.inputNumber > res[i].stock_quantity) {
+                console.log("Insufficient quantity!");
+                start();
+
+            } else {
+                console.log("Confirmation, your order can be fulfilled.");
+                console.log("You've selected:");
+                console.log("Item: " + res[i].product_name);
+                console.log("Department: " + res[i].department_name);
+                console.log("Price: " + res[i].price);
+                console.log("Quantity: " + userOrder.inputNumber);
+                console.log("Total: " + res[i].price * userOrder.inputNumber);
+                
+                var newStock = (res[i].stock_quantity - userOrder.inputNumber);
+                var purchaseId = (userOrder.inputId);
+                console.log("new stock total: " + newStock);
+               
+            }
+        }
+    });
+});
+}
