@@ -1,7 +1,9 @@
+// require packages
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 var Table = require('cli-table');
 
+// connect to sql 
 var connection = mysql.createConnection({
 
   host: "localhost",
@@ -39,7 +41,7 @@ function initialPrompt() {
     });
 }
 
-
+//display database in a table
 function tableDisplay() {
 
     var table = new Table({
@@ -72,7 +74,7 @@ function tableDisplay() {
     }
 }
 
-
+//customer purchase
 function customerPurchase() {
 
     inquirer.prompt([{

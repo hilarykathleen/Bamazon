@@ -1,55 +1,15 @@
 # Bamazon
-Create a MySQL Database called `bamazon`.
 
-2. Then create a Table inside of that database called `products`.
+Bamazon is an Amazon-like storefront node application using sql database that takes in in orders from customers and deplete stock from the store's inventory. 
 
-3. The products table should have each of the following columns:
+A table displaying id, item description, price and quantity will display once initial node command has been made.  User will then be given the prompt for the Id they would like to purchase followed by a prompt for the quantity.  
 
-   * item_id (unique id for each product)
+Once the customer has placed their order, the appliation checks to see if item or items requested are in stock. If items are not available a prompt will appear notifying customer of insufficient stock and order will not process.  
 
-   * product_name (Name of product)
+If sufficient quantity is available product database will update and customer will be shown the details of their order including total cost and stock remaining. 
 
-   * department_name
+Please reference images folder in the repository for screenshots of application demonstration. 
 
-   * price (cost to customer)
 
-   * stock_quantity (how much of the product is available in stores)
 
-4. Populate this database with around 10 different products. (i.e. Insert "mock" data rows into this database and table).
-
-The app should then prompt users with two messages.
-
-   * The first should ask them the ID of the product they would like to buy.
-   * The second message should ask how many units of the product they would like to buy.
-
-   Once the customer has placed the order, your application should check if your store has enough of the product to meet the customer's request.
-
-   * If not, the app should log a phrase like `Insufficient quantity!`, and then prevent the order from going through.
-
-8. However, if your store _does_ have enough of the product, you should fulfill the customer's order.
-   * This means updating the SQL database to reflect the remaining quantity.
-   * Once the update goes through, show the customer the total cost of their purchase.
-
-Create a new Node application called `bamazonManager.js`. Running this application will:
-
-  * List a set of menu options:
-
-    * View Products for Sale
-    
-    * View Low Inventory
-    
-    * Add to Inventory
-    
-    * Add New Product
-
-  * If a manager selects `View Products for Sale`, the app should list every available item: the item IDs, names, prices, and quantities.
-
-  * If a manager selects `View Low Inventory`, then it should list all items with an inventory count lower than five.
-
-  * If a manager selects `Add to Inventory`, your app should display a prompt that will let the manager "add more" of any item currently in the store.
-
-  * If a manager selects `Add New Product`, it should allow the manager to add a completely new product to the store.
-
-- - -
-
-* If you finished Challenge #2 and put in all the hours you were willing to spend on this activity, then rest easy! Otherwise continue to the next and final challenge.
+   
