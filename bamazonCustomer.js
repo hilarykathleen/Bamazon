@@ -1,7 +1,9 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var Table = require('cli-table');
 
 var connection = mysql.createConnection({
+
   host: "localhost",
 
   port: 3306,
@@ -10,15 +12,68 @@ var connection = mysql.createConnection({
 
   password: "rootroot",
   database: "bamazon_DB"
+
 });
 
 connection.connect(function(err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
-    start();
+    initialPrompt();
   });
 
-  function start() {
+function initialPrompt() {
+
+    inquirer.prompt([{
+
+        type: "confirm",
+        name: "confirm",
+        message: "Welcome to Bamazon! Would you like to view our product inventory?",
+        default: true
+
+    }]).then(function(user) {
+        if (user.confirm === true) {
+            tableDisplay();
+        } else {
+            console.log("Have a wonderful day!");
+        }
+    });
+}
+
+
+function tableDisplay() {
+
+    var table = new Table({
+        head: ['ID', 'Item', 'Department', 'Price', 'Stock'],
+        colWidths: [10, 30, 30, 30, 30]
+    });
+
+    productInventory();
+
+    function productInventory() {
+
+        connection.query("SELECT * FROM products", function(err, res) {
+            for (var i = 0; i < res.length; i++) {
+
+                var itemId = res[i].id,
+                    productName = res[i].product_name,
+                    departmentName = res[i].department_name,
+                    price = res[i].price,
+                    stockQuantity = res[i].stock_quantity;
+
+              table.push(
+                  [itemId, productName, departmentName, price, stockQuantity]
+            );
+          }
+            
+            // console.log(table.toString());
+            console.log("table" + table);
+            customerPurchase();
+        });
+    }
+}
+
+
+function customerPurchase() {
 
     inquirer.prompt([{
 
@@ -39,11 +94,11 @@ connection.connect(function(err) {
         for (var i = 0; i < res.length; i++) {
 
             if (userOrder.inputNumber > res[i].stock_quantity) {
-                console.log("Insufficient quantity!");
-                start();
+                console.log("Oh no! Insufficient quantity.");
+                customerPurchase();
 
             } else {
-                console.log("Confirmation, your order can be fulfilled.");
+                console.log("Hooray! Your item is in stock!");
                 console.log("You've selected:");
                 console.log("Item: " + res[i].product_name);
                 console.log("Department: " + res[i].department_name);
@@ -53,7 +108,7 @@ connection.connect(function(err) {
                 
                 var newStock = (res[i].stock_quantity - userOrder.inputNumber);
                 var purchaseId = (userOrder.inputId);
-                console.log("new stock total: " + newStock);
+                console.log("Updated stock total: " + newStock);
                
             }
         }
